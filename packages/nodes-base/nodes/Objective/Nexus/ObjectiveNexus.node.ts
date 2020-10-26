@@ -10,6 +10,24 @@ import {
 	nexusApiRequest
 } from './GenericFunctions';
 
+import * as winston from 'winston'
+
+const logger = winston.createLogger({
+	level: 'debug',
+	format: winston.format.combine(
+		winston.format.timestamp(),
+		winston.format.splat(),
+		winston.format.simple(),
+		winston.format.prettyPrint(),
+	),
+	defaultMeta: {service: 'user-service'},
+	transports: [
+		new winston.transports.File({filename: 'combined.log'}),
+		new winston.transports.Console()
+	],
+});
+
+
 export class ObjectiveNexus implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Objective Nexus',
@@ -1199,12 +1217,16 @@ export class ObjectiveNexus implements INodeType {
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 
+		logger.debug(">>>Start Nexus execute");
 		const items = this.getInputData();
 		const returnData: IDataObject[] = [];
 
 		const serverUrl = this.getNodeParameter('serverUrl', 0) as string;
 		const resource = this.getNodeParameter('resource', 0) as string;
 		const operation = this.getNodeParameter('operation', 0) as string;
+
+		logger.debug('items with o: %o', items);
+		logger.debug('serverUrl: %s, resource: %s, operation: %s', serverUrl, resource, operation);
 
 		let endpoint = '';
 		let requestMethod = '';
@@ -1578,6 +1600,9 @@ export class ObjectiveNexus implements INodeType {
 				options = {encoding: null};
 			}
 
+			// @ts-ignore
+			logger.debug('%s %s %o %o %o %o', requestMethod, endpoint, body, options, query, headers);
+
 			let responseData = await nexusApiRequest.call(this, requestMethod, serverUrl + endpoint, body, query, headers, options);
 
 			if (['document', 'documentversion'].includes(resource) && ['download', 'getContent'].includes(operation)) {
@@ -1635,6 +1660,7 @@ export class ObjectiveNexus implements INodeType {
 				returnData.push(responseData as IDataObject);
 			}
 		}
+
 
 		if (['document', 'documentversion'].includes(resource) && ['download', 'getContent'].includes(operation)) {
 			// For document downloads the documents get attached to the existing items
