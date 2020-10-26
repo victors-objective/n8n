@@ -90,7 +90,7 @@ export default Vue.extend({
 	right: 0;
 	width: 350px;
 	height: calc(100% - 65px);
-	background-color: #fff4f1;
+	background-color: #EFEFEB;
 	z-index: 200;
 	color: #555;
 

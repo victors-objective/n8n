@@ -197,7 +197,7 @@ export default mixins(
 .main-header {
 	position: fixed;
 	top: 0;
-	background-color: #32373f;
+	background-color: #3276cf;
 	height: 65px;
 	width: 100%;
 }
@@ -252,7 +252,7 @@ export default mixins(
 	}
 
 	.workflow-name {
-		color: $--color-primary;
+		color: #FFFFFF;
 	}
 }
 
@@ -267,7 +267,10 @@ export default mixins(
 
 .execution-icon.error,
 .workflow-not-saved {
-	color: #FF2244;
+	color: $--custom-error-text;
+	background-color:$--custom-error-background;
+	padding: 15px;
+	border-radius: 10px; /* this gives the rounded look */
 }
 
 .execution-icon.success {
