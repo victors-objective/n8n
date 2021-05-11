@@ -89,7 +89,7 @@ export class ObjectiveNexus implements INodeType {
 				displayName: 'Server',
 				name: 'serverUrl',
 				type: 'string',
-				default: 'https://server.com:0000',
+				default: 'https://vmvs.etc.ocl:8743',
 				required: true,
 				placeholder: 'schema://server_name:port_number',
 				description: 'Full server root url',

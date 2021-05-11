@@ -17,7 +17,7 @@
 				<el-menu-item index="logo" class="logo-item">
 					<a href="https://n8n.io" target="_blank" class="logo">
 						<img :src="basePath + 'n8n-icon-small.png'" class="icon" alt="n8n.io"/>
-						<span class="logo-text" slot="title">Objective</span>
+						<span class="logo-text" slot="title">Objective API</span>
 					</a>
 				</el-menu-item>
 
