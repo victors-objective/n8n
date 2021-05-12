@@ -308,21 +308,21 @@ export class CustomerIoTrigger implements INodeType {
 					const endpoint = `/reporting_webhooks/${webhookData.webhookId}`;
 					try {
 						await customerIoApiRequest.call(this, 'DELETE', endpoint, {}, 'beta');
-					} catch (e) {
+					} catch (error) {
 						return false;
 					}
 					delete webhookData.webhookId;
 				}
 				return true;
 			},
-		}
+		},
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const bodyData = this.getBodyData();
 		return {
 			workflowData: [
-				this.helpers.returnJsonArray(bodyData)
+				this.helpers.returnJsonArray(bodyData),
 			],
 		};
 	}

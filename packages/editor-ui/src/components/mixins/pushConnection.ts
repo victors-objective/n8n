@@ -8,6 +8,7 @@ import {
 	IPushDataTestWebhook,
 } from '../../Interface';
 
+import { externalHooks } from '@/components/mixins/externalHooks';
 import { nodeHelpers } from '@/components/mixins/nodeHelpers';
 import { showMessage } from '@/components/mixins/showMessage';
 import { titleChange } from '@/components/mixins/titleChange';
@@ -15,6 +16,7 @@ import { titleChange } from '@/components/mixins/titleChange';
 import mixins from 'vue-typed-mixins';
 
 export const pushConnection = mixins(
+	externalHooks,
 	nodeHelpers,
 	showMessage,
 	titleChange,
@@ -191,7 +193,7 @@ export const pushConnection = mixins(
 						return false;
 					}
 
-					if (this.$store.getters.activeExecutionId !== pushData.executionIdActive) {
+					if (this.$store.getters.activeExecutionId !== pushData.executionId) {
 						// The workflow which did finish execution did either not get started
 						// by this session or we do not have the execution id yet.
 						if (isRetry !== true) {
@@ -202,14 +204,29 @@ export const pushConnection = mixins(
 
 					const runDataExecuted = pushData.data;
 
+					let runDataExecutedErrorMessage;
 					// @ts-ignore
 					const workflow = this.getWorkflow();
 					if (runDataExecuted.finished !== true) {
 						// There was a problem with executing the workflow
 						let errorMessage = 'There was a problem executing the workflow!';
+
 						if (runDataExecuted.data.resultData.error && runDataExecuted.data.resultData.error.message) {
-							errorMessage = `There was a problem executing the workflow:<br /><strong>"${runDataExecuted.data.resultData.error.message}"</strong>`;
+							let nodeName: string | undefined;
+							if (runDataExecuted.data.resultData.error.node) {
+								nodeName = typeof runDataExecuted.data.resultData.error.node === 'string'
+									? runDataExecuted.data.resultData.error.node
+									: runDataExecuted.data.resultData.error.node.name;
+							}
+
+							const receivedError = nodeName
+								? `${nodeName}: ${runDataExecuted.data.resultData.error.message}`
+								: runDataExecuted.data.resultData.error.message;
+							errorMessage = `There was a problem executing the workflow:<br /><strong>"${receivedError}"</strong>`;
 						}
+
+						runDataExecutedErrorMessage = errorMessage;
+
 						this.$titleSet(workflow.name, 'ERROR');
 						this.$showMessage({
 							title: 'Problem executing workflow',
@@ -238,11 +255,25 @@ export const pushConnection = mixins(
 					// Set the node execution issues on all the nodes which produced an error so that
 					// it can be displayed in the node-view
 					this.updateNodesExecutionIssues();
+
+					let itemsCount = 0;
+					if(runDataExecuted.data.resultData.lastNodeExecuted && !runDataExecutedErrorMessage) {
+						itemsCount = runDataExecuted.data.resultData.runData[runDataExecuted.data.resultData.lastNodeExecuted][0].data!.main[0]!.length;
+					}
+
+					this.$externalHooks().run('pushConnection.executionFinished', {
+						itemsCount,
+						nodeName: runDataExecuted.data.resultData.lastNodeExecuted,
+						errorMessage: runDataExecutedErrorMessage,
+						runDataExecutedStartData: runDataExecuted.data.startData,
+						resultDataError: runDataExecuted.data.resultData.error,
+					});
+
 				} else if (receivedData.type === 'executionStarted') {
 					const pushData = receivedData.data as IPushDataExecutionStarted;
 
 					const executionData: IExecutionsCurrentSummaryExtended = {
-						idActive: pushData.executionId,
+						id: pushData.executionId,
 						finished: false,
 						mode: pushData.mode,
 						startedAt: pushData.startedAt,
