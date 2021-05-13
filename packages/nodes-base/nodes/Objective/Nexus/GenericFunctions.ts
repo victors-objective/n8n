@@ -1,6 +1,6 @@
 import {
-	IExecuteFunctions,
-	IHookFunctions,
+	IExecuteFunctions, IExecuteSingleFunctions,
+	IHookFunctions, ILoadOptionsFunctions, IWebhookFunctions,
 } from 'n8n-core';
 
 import {
@@ -8,7 +8,7 @@ import {
 } from 'request';
 
 import {
-	IDataObject,
+	IDataObject, NodeOperationError,
 } from 'n8n-workflow';
 
 /**
@@ -21,13 +21,16 @@ import {
  * @returns {Promise<any>}
  */
 export async function nexusApiRequest(this: IHookFunctions | IExecuteFunctions, method: string, endpoint: string, body: object, query: IDataObject = {}, headers?: object, option: IDataObject = {}): Promise<any> {// tslint:disable-line:no-any
-
+	const credentials = this.getCredentials('nexusDirectGrant');
+	if (credentials === undefined) {
+		throw new NodeOperationError(this.getNode(), 'No credentials got returned!');
+	}
 	const options: OptionsWithUri = {
 		headers,
 		method,
 		qs: query,
 		body,
-		uri: endpoint,
+		uri: credentials.serverUrl + endpoint,
 		json: true,
 		strictSSL:false,
 	};
@@ -38,25 +41,13 @@ export async function nexusApiRequest(this: IHookFunctions | IExecuteFunctions, 
 
 	Object.assign(options, option);
 
-	const authenticationMethod = this.getNodeParameter('authentication', 0) as string;
-
 	try {
-		if (authenticationMethod === 'basicAuth') {
 
-			const credentials = this.getCredentials('nexusBasic');
+		const tokenInfo = await getAccessToken.call(this);
 
-			if (credentials === undefined) {
-				throw new Error('No credentials got returned!');
-			}
+		options.headers!['Authorization'] = `Bearer ${tokenInfo.access_token}`;
 
-			const base64Credentials = Buffer.from(`${credentials.user}:${credentials.password}`).toString('base64');
-
-			options.headers!['Authorization'] = `Basic ${base64Credentials}`;
-
-			return await this.helpers.request(options);
-		} else {
-			return await this.helpers.requestOAuth2.call(this, 'informOAuth2Api', options);
-		}
+		return await this.helpers.request(options);
 	} catch (error) {
 		if (error.statusCode === 401) {
 			// Return a clear error
@@ -72,5 +63,32 @@ export async function nexusApiRequest(this: IHookFunctions | IExecuteFunctions, 
 
 		// If that data does not exist for some reason return the actual error
 		throw error;
+	}
+}
+
+async function getAccessToken(this: IHookFunctions | IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IWebhookFunctions): Promise<any> { // tslint:disable-line:no-any
+	const credentials = this.getCredentials('nexusDirectGrant');
+	if (credentials === undefined) {
+		throw new NodeOperationError(this.getNode(), 'No credentials got returned!');
+	}
+
+	const headerForm = Object.assign({},{ 'Content-Type': 'application/x-www-form-urlencoded' });
+	const options: OptionsWithUri = {
+		headers: headerForm,
+		method: 'POST',
+		form: {
+			grant_type: 'password',
+			client_id:`${credentials.clientId}`,
+			username:`${credentials.user}`,
+			password:`${credentials.password}`
+		},
+		uri: `${credentials.serverUrl}/auth/realms/ecm/protocol/openid-connect/token`,
+		json: true,
+		strictSSL:false,
+	};
+	try {
+		return await this.helpers.request!(options);
+	} catch (error) {
+		throw new NodeOperationError(this.getNode(), error);
 	}
 }

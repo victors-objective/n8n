@@ -1,4 +1,4 @@
-import {BINARY_ENCODING, IExecuteFunctions} from 'n8n-core';
+import {IExecuteFunctions} from 'n8n-core';
 import {
 	INodeExecutionData,
 	INodeType,
@@ -39,22 +39,25 @@ import {
 	workflowOperations,
 } from './WorkflowDescription';
 
-import * as winston from 'winston'
+// import * as winston from 'winston'
 
-const logger = winston.createLogger({
-	level: 'info',
-	format: winston.format.combine(
-		winston.format.timestamp(),
-		winston.format.splat(),
-		winston.format.simple(),
-		winston.format.prettyPrint(),
-	),
-	defaultMeta: {service: 'user-service'},
-	transports: [
-		new winston.transports.File({filename: 'combined.log'}),
-		new winston.transports.Console()
-	],
-});
+const BINARY_ENCODING = 'base64';
+
+// temporary commented out due to compatibility issue with 'standalone custom' deployment
+// const logger = winston.createLogger({
+// 	level: 'info',
+// 	format: winston.format.combine(
+// 		winston.format.timestamp(),
+// 		winston.format.splat(),
+// 		winston.format.simple(),
+// 		winston.format.prettyPrint(),
+// 	),
+// 	defaultMeta: {service: 'user-service'},
+// 	transports: [
+// 		new winston.transports.File({filename: 'combined.log'}),
+// 		new winston.transports.Console()
+// 	],
+// });
 
 
 export class ObjectiveNexus implements INodeType {
@@ -73,44 +76,11 @@ export class ObjectiveNexus implements INodeType {
 		outputs: ['main'],
 		credentials: [
 			{
-				name: 'nexusBasic',
+				name: 'nexusDirectGrant',
 				required: true,
-				displayOptions: {
-					show: {
-						authentication: [
-							'basicAuth',
-						],
-					},
-				},
 			}
 		],
 		properties: [
-			{
-				displayName: 'Server',
-				name: 'serverUrl',
-				type: 'string',
-				default: 'https://vmvs.etc.ocl:8743',
-				required: true,
-				placeholder: 'schema://server_name:port_number',
-				description: 'Full server root url',
-			},
-			{
-				displayName: 'Authentication',
-				name: 'authentication',
-				type: 'options',
-				options: [
-					{
-						name: 'Basic Auth',
-						value: 'basicAuth'
-					},
-					{
-						name: 'OAuth2',
-						value: 'oAuth2',
-					}
-				],
-				default: 'basicAuth',
-				description: 'Means of authenticating with the service.',
-			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -169,16 +139,15 @@ export class ObjectiveNexus implements INodeType {
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 
-		logger.debug(">>>Start Nexus execute");
+		// logger.debug(">>>Start Nexus execute");
 		const items = this.getInputData();
 		const returnData: IDataObject[] = [];
 
-		const serverUrl = this.getNodeParameter('serverUrl', 0) as string;
 		const resource = this.getNodeParameter('resource', 0) as string;
 		const operation = this.getNodeParameter('operation', 0) as string;
 
-		logger.debug('items with o: %o', items);
-		logger.debug('serverUrl: %s, resource: %s, operation: %s', serverUrl, resource, operation);
+		// logger.debug('items with o: %o', items);
+		// logger.debug('resource: %s, operation: %s', resource, operation);
 
 		let endpoint = '';
 		let requestMethod = '';
@@ -551,9 +520,9 @@ export class ObjectiveNexus implements INodeType {
 			}
 
 			// @ts-ignore
-			logger.debug('%s %s %o %o %o %o', requestMethod, endpoint, body, options, query, headers);
+			// logger.debug('%s %s %o %o %o %o', requestMethod, endpoint, body, options, query, headers);
 
-			let responseData = await nexusApiRequest.call(this, requestMethod, serverUrl + endpoint, body, query, headers, options);
+			let responseData = await nexusApiRequest.call(this, requestMethod, endpoint, body, query, headers, options);
 
 			if (['document', 'documentversion'].includes(resource) && ['download', 'getContent'].includes(operation)) {
 				const newItem: INodeExecutionData = {

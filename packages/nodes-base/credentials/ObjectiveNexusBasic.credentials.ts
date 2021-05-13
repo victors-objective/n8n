@@ -5,8 +5,8 @@ import {
 
 
 export class ObjectiveNexusBasic implements ICredentialType {
-	name = 'nexusBasic';
-	displayName = 'Basic Auth';
+	name = 'nexusDirectGrant';
+	displayName = 'Direct Access Grant';
 	documentationUrl = 'httpRequest';
 	properties = [
 		{
@@ -24,6 +24,21 @@ export class ObjectiveNexusBasic implements ICredentialType {
 				password: true,
 			},
 			default: '',
+		},
+		{
+			displayName: 'Client Id',
+			name: 'clientId',
+			type: 'string' as NodePropertyTypes,
+			default: '',
+		},
+		{
+			displayName: 'Server',
+			name: 'serverUrl',
+			type: 'string' as NodePropertyTypes,
+			default: '',
+			required: true,
+			placeholder: 'https://server.url',
+			description: 'Full server root url',
 		},
 	];
 }
