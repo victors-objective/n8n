@@ -4,7 +4,7 @@ import {
 } from 'n8n-workflow';
 
 
-export class ObjectiveNexusBasic implements ICredentialType {
+export class ObjectiveNexusDirectGrant implements ICredentialType {
 	name = 'nexusDirectGrant';
 	displayName = 'Direct Access Grant';
 	documentationUrl = 'httpRequest';
