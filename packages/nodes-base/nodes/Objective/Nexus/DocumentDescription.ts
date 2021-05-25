@@ -40,6 +40,11 @@ export const documentOperations = [
 				description: 'Upload a document',
 			},
 			{
+				name: 'Upload From AWS S3',
+				value: 'uploadFromAWS',
+				description: 'Upload a document using pre-signed AWS S3 URL',
+			},
+			{
 				name: 'Get metadata',
 				value: 'getMetadata',
 				description: 'Get document metadata',
@@ -161,7 +166,8 @@ export const documentFields = [
 		displayOptions: {
 			show: {
 				operation: [
-					'upload'
+					'upload',
+					'uploadFromAWS'
 				],
 				resource: [
 					'document',
@@ -245,7 +251,8 @@ export const documentFields = [
 		displayOptions: {
 			show: {
 				operation: [
-					'upload'
+					'upload',
+					'uploadFromAWS'
 				],
 				resource: [
 					'document',
@@ -254,6 +261,29 @@ export const documentFields = [
 		},
 		placeholder: 'New document',
 		description: 'Text to set as a document name.',
+	},
+
+// Upload FROM AWS S3
+
+
+	{
+		displayName: 'URL',
+		name: 's3url',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: {
+			show: {
+				operation: [
+					'uploadFromAWS'
+				],
+				resource: [
+					'document',
+				],
+			},
+		},
+		placeholder: 'https://pre-signed.aws.url',
+		description: 'URL with the document content.',
 	},
 
 ] as INodeProperties[];

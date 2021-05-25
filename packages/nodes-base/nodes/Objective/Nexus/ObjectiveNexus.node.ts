@@ -38,6 +38,7 @@ import {
 	workflowFields,
 	workflowOperations,
 } from './WorkflowDescription';
+import {OptionsWithUri} from "request";
 
 // import * as winston from 'winston'
 
@@ -240,6 +241,55 @@ export class ObjectiveNexus implements INodeType {
 						// Is text file
 						body = Buffer.from(this.getNodeParameter('fileContent', i) as string, 'utf8');
 					}
+				} else if (operation === 'uploadFromAWS') {
+
+					// get file from S3
+					const head: IDataObject = {};
+					head['Content-Type'] = 'application/json';
+					head['accept'] = 'application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7';
+					const s3URL = this.getNodeParameter('s3url', i) as string;
+					let b: IDataObject | Buffer = {};
+					let q: IDataObject = {};
+					const opt: OptionsWithUri = {
+						headers: head,
+						method: 'GET',
+						qs: q,
+						body: b,
+						uri: s3URL,
+						json: true,
+						strictSSL: false,
+						gzip:true,
+
+					};
+					opt.encoding = null;
+					// @ts-ignore
+					opt.resolveWithFullResponse = true;
+					let responseData = await this.helpers.request(opt)
+					// console.log(responseData);
+
+					//         upload
+
+					requestMethod = 'POST';
+					headers['Content-Type'] = 'multipart-form-data';
+					endpoint = '/api/resources/documents';
+
+
+					body.parentId = this.getNodeParameter('containerId', i) as string;
+					let fileName = this.getNodeParameter('documentName', i) as string;
+					body.name = fileName;
+					body.content = {
+						//@ts-ignore
+						//value: Buffer.from(responseData, BINARY_ENCODING),
+						value: responseData.body,
+						options: {
+							//@ts-ignore
+							filename: fileName,
+							//@ts-ignore
+							contentType: 'image/png',
+						}
+					};
+					options = {formData: body};
+					body = {};
 				}
 			} else if (resource === 'folder') {
 				if (operation === 'create') {
