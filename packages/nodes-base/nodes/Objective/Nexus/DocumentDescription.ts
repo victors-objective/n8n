@@ -262,6 +262,28 @@ export const documentFields = [
 		placeholder: 'New document',
 		description: 'Text to set as a document name.',
 	},
+	{
+		displayName: 'Object Type Id',
+		name: 'definitionId',
+		type: 'string',
+		default: 'dotdA9',
+		required: false,
+		displayOptions: {
+			show: {
+				operation: [
+					'upload',
+					'uploadFromAWS'
+				],
+				resource: [
+					'document',
+				],
+			},
+		},
+		placeholder: 'Object Type for a new document',
+		description: 'Object Type Id',
+	},
+
+
 
 // Upload FROM AWS S3
 
@@ -284,6 +306,25 @@ export const documentFields = [
 		},
 		placeholder: 'https://pre-signed.aws.url',
 		description: 'URL with the document content.',
+	},
+	{
+		displayName: 'Temporary directory path',
+		name: 'tempDirPath',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: {
+			show: {
+				operation: [
+					'uploadFromAWS'
+				],
+				resource: [
+					'document',
+				],
+			},
+		},
+		placeholder: '/data/example/temp',
+		description: 'Full path to temporary directory',
 	},
 
 ] as INodeProperties[];

@@ -1,3 +1,4 @@
+"use strict";
 import {
 	IExecuteFunctions, IExecuteSingleFunctions,
 	IHookFunctions, ILoadOptionsFunctions, IWebhookFunctions,

@@ -1,3 +1,4 @@
+"use strict";
 import {IExecuteFunctions} from 'n8n-core';
 import {
 	INodeExecutionData,
@@ -24,7 +25,6 @@ import {
 } from './CatalogueDescription';
 import {
 	commonFields,
-	commonOperations,
 } from './CommonDescription';
 import {
 	fileFields,
@@ -38,8 +38,10 @@ import {
 	workflowFields,
 	workflowOperations,
 } from './WorkflowDescription';
-import {OptionsWithUri} from "request";
 
+import { v1 as uuidv1 } from 'uuid';
+import {PlatformPath} from "path";
+import ErrnoException = NodeJS.ErrnoException;
 // import * as winston from 'winston'
 
 const BINARY_ENCODING = 'base64';
@@ -60,6 +62,23 @@ const BINARY_ENCODING = 'base64';
 // 	],
 // });
 
+async function createTempFile(fs: any, filePath: any, opt: any) {
+	return new Promise<void>(resolve => {
+		let writeStream = fs.createWriteStream(filePath);
+		const {pipeline} = require('stream');
+		let https = require('follow-redirects').https;
+		let req = https.get(opt, function (res: any) {
+			pipeline(res, writeStream, (err: any) => {
+				if (err) {
+					console.error('Pipeline failed.', err);
+				} else {
+					resolve();
+				}
+			});
+		});
+		req.end();
+	})
+}
 
 export class ObjectiveNexus implements INodeType {
 	description: INodeTypeDescription = {
@@ -155,8 +174,9 @@ export class ObjectiveNexus implements INodeType {
 		let body: IDataObject | Buffer;
 		let options;
 		let query: IDataObject = {};
-
+		let filePath : string = '';
 		const headers: IDataObject = {};
+		let fs = require('fs');
 
 		for (let i = 0; i < items.length; i++) {
 			body = {};
@@ -187,7 +207,7 @@ export class ObjectiveNexus implements INodeType {
 							|| items[i].binary[binaryPropertyName] === undefined) {
 							throw new Error(`No binary data property "${binaryPropertyName}" does not exists on item!`);
 						}
-
+						body.definitionId = this.getNodeParameter('definitionId', i) as string;
 						body.parentId = this.getNodeParameter('containerId', i) as string;
 						body.name = this.getNodeParameter('documentName', i) as string;
 						body.content = {
@@ -244,28 +264,13 @@ export class ObjectiveNexus implements INodeType {
 				} else if (operation === 'uploadFromAWS') {
 
 					// get file from S3
-					const head: IDataObject = {};
-					head['Content-Type'] = 'application/json';
-					head['accept'] = 'application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7';
 					const s3URL = this.getNodeParameter('s3url', i) as string;
-					let b: IDataObject | Buffer = {};
-					let q: IDataObject = {};
-					const opt: OptionsWithUri = {
-						headers: head,
-						method: 'GET',
-						qs: q,
-						body: b,
-						uri: s3URL,
-						json: true,
-						strictSSL: false,
-						gzip:true,
+					const tempDirPath = this.getNodeParameter('tempDirPath', i) as string;
 
-					};
-					opt.encoding = null;
-					// @ts-ignore
-					opt.resolveWithFullResponse = true;
-					let responseData = await this.helpers.request(opt)
-					// console.log(responseData);
+					let path : PlatformPath = require('path');
+					filePath = path.join(tempDirPath, uuidv1() + '.temp');
+
+					await createTempFile(fs, filePath, s3URL);
 
 					//         upload
 
@@ -275,17 +280,16 @@ export class ObjectiveNexus implements INodeType {
 
 
 					body.parentId = this.getNodeParameter('containerId', i) as string;
+					body.definitionId = this.getNodeParameter('definitionId', i) as string;
 					let fileName = this.getNodeParameter('documentName', i) as string;
-					body.name = fileName;
+					body.name = fileName.split('.').slice(0, -1).join('.');// filename without extension
 					body.content = {
 						//@ts-ignore
-						//value: Buffer.from(responseData, BINARY_ENCODING),
-						value: responseData.body,
+						value: fs.createReadStream(filePath),
 						options: {
 							//@ts-ignore
 							filename: fileName,
-							//@ts-ignore
-							contentType: 'image/png',
+							contentType: 'application/octet-stream',
 						}
 					};
 					options = {formData: body};
@@ -574,6 +578,14 @@ export class ObjectiveNexus implements INodeType {
 
 			let responseData = await nexusApiRequest.call(this, requestMethod, endpoint, body, query, headers, options);
 
+			if (Boolean(filePath)) {
+				// if temp file was created delete it
+				fs.unlink(filePath, (err: ErrnoException | null) => {
+					if (err) {
+						console.error(err);
+					}
+				})
+			}
 			if (['document', 'documentversion'].includes(resource) && ['download', 'getContent'].includes(operation)) {
 				const newItem: INodeExecutionData = {
 					json: items[i].json,
@@ -581,9 +593,6 @@ export class ObjectiveNexus implements INodeType {
 				};
 
 				if (items[i].binary !== undefined) {
-					// Create a shallow copy of the binary data so that the old
-					// data references which do not get changed still stay behind
-					// but the incoming data does not get changed.
 					Object.assign(newItem.binary, items[i].binary);
 				}
 
