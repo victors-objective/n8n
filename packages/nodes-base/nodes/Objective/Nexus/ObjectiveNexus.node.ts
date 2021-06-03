@@ -4,7 +4,7 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-	IDataObject,
+	IDataObject, NodeOperationError,
 } from 'n8n-workflow';
 
 import {
@@ -62,20 +62,33 @@ const BINARY_ENCODING = 'base64';
 // 	],
 // });
 
-async function createTempFile(fs: any, filePath: any, opt: any) {
-	return new Promise<void>(resolve => {
+async function createTempFile(fs: any, filePath: string, url: string, timeout: number) {
+	return new Promise<string>(resolve => {
 		let writeStream = fs.createWriteStream(filePath);
 		const {pipeline} = require('stream');
 		let https = require('follow-redirects').https;
-		let req = https.get(opt, function (res: any) {
+		let req = https.get(url, function (res: any) {
 			pipeline(res, writeStream, (err: any) => {
 				if (err) {
 					console.error('Pipeline failed.', err);
+					resolve('error: ' + err);
 				} else {
-					resolve();
+					resolve('success');
 				}
 			});
 		});
+		req.on("error", function (e: any) {
+			console.error("Request Error : " + JSON.stringify(e));
+			resolve('error: ' + e);
+		});
+		if (timeout > 0) {
+			req.setTimeout(timeout, function () {
+				console.error("Server connection timeout (after 1 second)");
+				req.abort();
+				resolve('timeout');
+			});
+		}
+
 		req.end();
 	})
 }
@@ -266,12 +279,18 @@ export class ObjectiveNexus implements INodeType {
 					// get file from S3
 					const s3URL = this.getNodeParameter('s3url', i) as string;
 					const tempDirPath = this.getNodeParameter('tempDirPath', i) as string;
+					const timeout = this.getNodeParameter('timeout', i, 0) as number;
 
 					let path : PlatformPath = require('path');
 					filePath = path.join(tempDirPath, uuidv1() + '.temp');
 
-					await createTempFile(fs, filePath, s3URL);
-
+					let reqResp = await createTempFile(fs, filePath, s3URL, timeout);
+					console.log(reqResp)
+					if ('timeout' === reqResp) {
+						throw new NodeOperationError(this.getNode(), `Server connection timeout. Temp file creation failed.`);
+					} else if ('success' !== reqResp) {
+						throw new NodeOperationError(this.getNode(), ` Temp file creation failed. ` + reqResp);
+					}
 					//         upload
 
 					requestMethod = 'POST';

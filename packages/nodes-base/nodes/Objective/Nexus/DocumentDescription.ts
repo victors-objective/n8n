@@ -326,5 +326,24 @@ export const documentFields = [
 		placeholder: '/data/example/temp',
 		description: 'Full path to temporary directory',
 	},
+	{
+		displayName: 'Timeout',
+		name: 'timeout',
+		type: 'number',
+		default: '',
+		required: false,
+		displayOptions: {
+			show: {
+				operation: [
+					'uploadFromAWS'
+				],
+				resource: [
+					'document',
+				],
+			},
+		},
+		placeholder: 'Timeout in milliseconds.',
+		description: 'Timeout in milliseconds. 0 - no timeout.',
+	},
 
 ] as INodeProperties[];
