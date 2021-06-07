@@ -16,8 +16,8 @@
 
 				<el-menu-item index="logo" class="logo-item">
 					<a href="#" target="_blank" class="logo">
-						<img :src="basePath + 'n8n-icon-small.png'" class="icon" alt="n8n.io"/>
-						<span class="logo-text" slot="title">Objective API</span>
+						<img :src="basePath + 'Integrate-long.png'" class="icon" alt=""/>
+						<span class="logo-text" slot="title">Objective Integrate</span>
 					</a>
 				</el-menu-item>
 
@@ -587,7 +587,7 @@ a.logo {
 	position: relative;
 	top: -3px;
 	left: 5px;
-	font-weight: bold;
+	font-weight: normal;
 	color: #fff;
 	text-decoration: none;
 }
