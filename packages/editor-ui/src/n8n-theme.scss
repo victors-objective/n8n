@@ -8,8 +8,8 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "~element-ui/packages/theme-chalk/src/index";
 
 body {
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 300;
+	font-family: Roboto, -apple-system, BlinkMacSystemFont, Arial, Helvetica, sans-serif;;
+	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	background-color: $--custom-node-view-background;
@@ -19,12 +19,12 @@ body {
 }
 
 input {
-	font-family: 'Open Sans', sans-serif;
+	font-family: Roboto, -apple-system, BlinkMacSystemFont, Arial, Helvetica, sans-serif;
 	font-weight: 400;
 }
 button {
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 600;
+	font-family: Roboto, -apple-system, BlinkMacSystemFont, Arial, Helvetica, sans-serif;
+	font-weight: 500;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -360,7 +360,7 @@ h1, h2, h3, h4, h5, h6 {
 	border: none;
 	border-radius: 20px;
 	color: #fff;
-	font-weight: 600;
+	font-weight: 500;
 	background-color: $--color-primary;
 
 	.next-icon-text {

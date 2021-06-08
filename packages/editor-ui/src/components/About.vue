@@ -1,10 +1,10 @@
 <template>
 	<span>
-		<el-dialog class="n8n-about" :visible="dialogVisible" append-to-body width="50%" title="About n8n" :before-close="closeDialog">
+		<el-dialog class="n8n-about" :visible="dialogVisible" append-to-body width="50%" title="About" :before-close="closeDialog">
 			<div>
 				<el-row>
 					<el-col :span="8" class="info-name">
-						n8n Version:
+						Version:
 					</el-col>
 					<el-col :span="16">
 						{{versionCli}}

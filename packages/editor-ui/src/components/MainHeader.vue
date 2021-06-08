@@ -252,6 +252,7 @@ export default mixins(
 		line-height: 65px;
 		margin-right: 5em;
 		right: 0;
+		color: #FFFFFF;
 	}
 
 	.workflow-name {

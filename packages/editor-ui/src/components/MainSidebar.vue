@@ -16,8 +16,7 @@
 
 				<el-menu-item index="logo" class="logo-item">
 					<a href="#" target="_blank" class="logo">
-						<img :src="basePath + 'Integrate-long.png'" class="icon" alt=""/>
-						<span class="logo-text" slot="title">Objective Integrate</span>
+						<img :src="basePath + 'integrate-with-text.svg'" class="icon" alt=""/>
 					</a>
 				</el-menu-item>
 
@@ -127,7 +126,7 @@
 					<el-menu-item index="help-about">
 						<template slot="title">
 							<font-awesome-icon class="about-icon" icon="info"/>
-							<span slot="title" class="item-title">About n8n</span>
+							<span slot="title" class="item-title">About</span>
 						</template>
 					</el-menu-item>
 				</el-submenu>
@@ -572,8 +571,8 @@ export default mixins(
 
 		.icon {
 			position: relative;
-			height: 23px;
-			left: -10px;
+			height: 30px;
+			left: -0px;
 			top: -2px;
 		}
 	}
