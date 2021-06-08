@@ -20,11 +20,11 @@ export const titleChange = Vue.extend({
 				icon = '▶️';
 			}
 
-			window.document.title = `n8n - ${icon} ${workflow}`;
+			window.document.title = `${icon} ${workflow} - Objective Integrate`;
 		},
 
 		$titleReset() {
-			document.title = `n8n - Workflow Automation`;
+			document.title = `Objective - Workflow Automation`;
 		},
 
 	},
