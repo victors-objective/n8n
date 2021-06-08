@@ -4,6 +4,11 @@
 			<input type="file" ref="importFile" style="display: none" v-on:change="handleFileImport()">
 
 			<div class="top-menu">
+				<div class="logo-item">
+					<a href="#" target="_blank" class="logo">
+						<img :src="basePath + 'integrate-with-text.svg'" class="icon" alt=""/>
+					</a>
+				</div>
 				<div class="center-item">
 					<span v-if="isExecutionPage">
 						Execution Id:
@@ -103,6 +108,12 @@ export default mixins(
 		name: 'MainHeader',
 		components: {
 			WorkflowActivator,
+		},
+		data () {
+			return {
+				// @ts-ignore
+				basePath: this.$store.getters.getBaseUrl,
+			};
 		},
 		computed: {
 			executionId (): string | undefined {
@@ -210,6 +221,21 @@ export default mixins(
 	font-size: 0.9em;
 	width: 100%;
 	font-weight: 400;
+
+	.logo-item {
+		position: absolute;
+		top: 13px;
+		line-height: 65px;
+		left: 19px;
+		color: #FFFFFF;
+
+		.icon {
+			position: relative;
+			height: 30px;
+			left: -0px;
+			top: -2px;
+		}
+	}
 
 	.center-item {
 		margin: 0 auto;

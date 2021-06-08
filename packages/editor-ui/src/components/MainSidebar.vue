@@ -14,11 +14,6 @@
 			</div>
 			<el-menu default-active="workflow" @select="handleSelect" :collapse="isCollapsed">
 
-				<el-menu-item index="logo" class="logo-item">
-					<a href="#" target="_blank" class="logo">
-						<img :src="basePath + 'integrate-with-text.svg'" class="icon" alt=""/>
-					</a>
-				</el-menu-item>
 
 				<MenuItemsIterator :items="sidebarMenuTopItems" :root="true"/>
 
@@ -523,7 +518,7 @@ export default mixins(
 #collapse-change-button {
 	position: absolute;
 	z-index: 10;
-	top: 55px;
+	top: -10px;
 	left: 25px;
 	text-align: right;
 	line-height: 24px;
@@ -565,30 +560,6 @@ export default mixins(
 		}
 	}
 
-	&.logo-item {
-		background-color: $--color-primary !important;
-		height: 65px;
-
-		.icon {
-			position: relative;
-			height: 30px;
-			left: -0px;
-			top: -2px;
-		}
-	}
-}
-
-a.logo {
-	text-decoration: none;
-}
-
-.logo-text {
-	position: relative;
-	top: -3px;
-	left: 5px;
-	font-weight: normal;
-	color: #fff;
-	text-decoration: none;
 }
 
 .expanded #collapse-change-button {
@@ -601,6 +572,7 @@ a.logo {
 #side-menu {
 	position: fixed;
 	height: 100%;
+	top: 65px;
 
 	.el-menu {
 		height: 100%;
