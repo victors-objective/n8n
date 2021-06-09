@@ -556,7 +556,7 @@ export default mixins(
 		height: calc(100% - 110px);
 
 		.el-tabs__header {
-			background-color: #fff5f2;
+			background-color: $--custom-window-sidebar-top;
 			line-height: 2em;
 		}
 

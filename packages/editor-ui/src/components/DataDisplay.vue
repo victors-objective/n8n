@@ -133,7 +133,7 @@ export default mixins(externalHooks, nodeHelpers, workflowHelpers).extend({
 	width: 100%;
 	height: 100%;
 	z-index: 20;
-	background-color: #9d8d9dd8;
+	background-color: #5CA3FFAF;
 
 	.close-button {
 		position: absolute;
@@ -215,7 +215,7 @@ export default mixins(externalHooks, nodeHelpers, workflowHelpers).extend({
 
 			#doc-hyperlink, #doc-hyperlink:visited, #doc-hyperlink:focus, #doc-hyperlink:active {
 				text-decoration: none;
-				color: #FF6150;
+				color: $--color-primary;
 			}
 		}
 	}

@@ -376,7 +376,7 @@ export default mixins(
 	.doc-hyperlink:focus,
 	.doc-hyperlink:active {
 		text-decoration: none;
-		color: #FF6150;
+		color: $--color-primary;
 	}
 }
 
