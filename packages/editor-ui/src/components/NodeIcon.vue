@@ -39,7 +39,6 @@ export default Vue.extend({
 				height: size + 'px',
 				'font-size': Math.floor(parseInt(this.size, 10) * 0.6) + 'px',
 				'line-height': size + 'px',
-				'border-radius': Math.ceil(size / 2) + 'px',
 			};
 		},
 		isSvgIcon (): boolean {
@@ -81,7 +80,6 @@ export default Vue.extend({
 .node-icon-wrapper {
 	width: 30px;
 	height: 30px;
-	border-radius: 15px;
 	color: #444;
 	line-height: 30px;
 	font-size: 1.1em;
