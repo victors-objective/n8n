@@ -222,13 +222,14 @@ export class ObjectiveNexus implements INodeType {
 						}
 						body.definitionId = this.getNodeParameter('definitionId', i) as string;
 						body.parentId = this.getNodeParameter('containerId', i) as string;
-						body.name = this.getNodeParameter('documentName', i) as string;
+						let fileName = this.getNodeParameter('documentName', i) as string;
+						body.name = fileName.split('.').slice(0, -1).join('.');// filename without extension
 						body.content = {
 							//@ts-ignore
 							value: Buffer.from(items[i].binary[binaryPropertyName].data, BINARY_ENCODING),
 							options: {
 								//@ts-ignore
-								filename: items[i].binary[binaryPropertyName].fileName,
+								filename: fileName,
 								//@ts-ignore
 								contentType: items[i].binary[binaryPropertyName].mimeType,
 							}
