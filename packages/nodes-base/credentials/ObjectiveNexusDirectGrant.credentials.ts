@@ -7,7 +7,6 @@ import {
 export class ObjectiveNexusDirectGrant implements ICredentialType {
 	name = 'nexusDirectGrant';
 	displayName = 'Direct Access Grant';
-	documentationUrl = 'httpRequest';
 	properties = [
 		{
 			displayName: 'User',
