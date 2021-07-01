@@ -13,5 +13,4 @@ _START_PACKAGE
 .vscode
 .idea
 .prettierrc.js
-.iml
-.log
+vetur.config.js
