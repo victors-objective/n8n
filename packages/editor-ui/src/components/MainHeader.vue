@@ -211,7 +211,7 @@ export default mixins(
 .main-header {
 	position: fixed;
 	top: 0;
-	background-color: #3276cf;
+	background-color: $--color-menu-background;
 	height: 65px;
 	width: 100%;
 }

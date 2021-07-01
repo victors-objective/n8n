@@ -2,6 +2,9 @@
 $--color-primary: #3276cf;
 $--color-primary-light: #5CA3FF;
 
+$--color-menu-text: #FFFFFF;
+$--color-menu-background: #32373f;
+
 // Dialog
 $--custom-dialog-text-color: #666;
 $--custom-dialog-background: #fff;
@@ -16,8 +19,8 @@ $--custom-expression-background: #f7f5ff;
 
 $--custom-window-sidebar-top : #efefeb;
 
-$--custom-error-background : #FF7381;
-$--custom-error-text : #FFFFFF;
+$--custom-error-background : #edc8c5;
+$--custom-error-text : #b4302b;
 $--custom-running-background : #ffffe5;
 $--custom-running-text : #eb9422;
 $--custom-success-background : #e3f0e4;
@@ -25,7 +28,7 @@ $--custom-success-text : #40c351;
 $--custom-warning-background : #ffffe5;
 $--custom-warning-text : #eb9422;
 
-$--custom-node-view-background : #faf9fe;
+$--custom-node-view-background : #ffffff;
 
 // Table
 $--custom-table-background-main: $--custom-header-background	;

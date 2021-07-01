@@ -573,9 +573,11 @@ export default mixins(
 	position: fixed;
 	height: 100%;
 	top: 65px;
+	background-color: $--color-menu-background;
 
 	.el-menu {
 		height: 100%;
+		background-color: $--color-menu-background;
 	}
 }
 

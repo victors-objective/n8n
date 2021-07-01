@@ -132,16 +132,16 @@ h1, h2, h3, h4, h5, h6 {
 		li.el-menu-item {
 			height: 35px;
 			line-height: 35px;
-			color: $--custom-dialog-text-color;
+			color: $--color-menu-text;
 		}
 	}
 
 	.el-menu-item,
 	.el-submenu__title {
-		color: $--color-primary;
+		color: $--color-menu-text;
 		font-size: 1.2em;
 		.el-submenu__icon-arrow {
-			color: $--color-primary;
+			color: $--color-menu-text;
 			font-weight: 800;
 			font-size: 1em;
 		}
@@ -229,7 +229,7 @@ h1, h2, h3, h4, h5, h6 {
 	border-top: 1px solid #ddd;
 }
 .el-dropdown-menu__item {
-	color: $--color-primary;
+	color: $--color-menu-text;
 }
 
 
