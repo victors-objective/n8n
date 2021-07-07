@@ -2,6 +2,11 @@
 	<div>
 		<div :class="{'main-header': true, expanded: !sidebarMenuCollapsed}">
 			<div class="top-menu">
+				<div class="logo-item">
+					<a href="#" target="_blank" class="logo">
+						<img :src="basePath + 'integrate-with-text.svg'" class="icon" alt=""/>
+					</a>
+				</div>
 				<ExecutionDetails v-if="isExecutionPage" />
 				<WorkflowDetails v-else />
 			</div>
@@ -26,6 +31,12 @@ export default mixins(
 		components: {
 			WorkflowDetails,
 			ExecutionDetails,
+		},
+		data () {
+			return {
+				// @ts-ignore
+				basePath: this.$store.getters.getBaseUrl,
+			};
 		},
 		computed: {
 			...mapGetters('ui', [
@@ -67,16 +78,13 @@ export default mixins(
 .main-header {
 	position: fixed;
 	top: 0;
-	background-color: #fff;
+	background-color: $--color-menu-background;
 	height: 65px;
 	width: 100%;
 	box-sizing: border-box;
+	border-top:solid 4px $--color-primary;
+	padding-left: 300px;
 
-	padding-left: $--sidebar-width;
-
-	&.expanded {
-		padding-left: $--sidebar-expanded-width;
-	}
 
 	* {
 		box-sizing: border-box;
@@ -90,5 +98,20 @@ export default mixins(
 	height: $--header-height;
 	font-weight: 400;
 	padding: 0 20px;
+}
+
+.logo-item {
+	position: absolute;
+	top: 13px;
+	line-height: 65px;
+	left: 19px;
+	color: #FFFFFF;
+
+	.icon {
+		position: relative;
+		height: 30px;
+		left: -0px;
+		top: -2px;
+	}
 }
 </style>

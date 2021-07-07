@@ -96,6 +96,7 @@ export default mixins(titleChange).extend({
 .title {
 	flex: 1;
 	text-align: center;
+	color: $--color-menu-text;
 }
 
 .read-only {

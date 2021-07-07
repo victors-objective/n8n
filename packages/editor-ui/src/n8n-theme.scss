@@ -127,7 +127,15 @@ h1, h2, h3, h4, h5, h6 {
 		width: 75px;
 	}
 
-	.el-menu--popup,
+	.el-menu--popup {
+	  font-size: 0.9em;
+	  background-color: $--color-menu-background;
+	  li.el-menu-item {
+		height: 35px;
+		line-height: 35px;
+		color: $--color-menu-text;
+	  }
+	}
 	.el-menu--inline {
 		font-size: 0.9em;
 		li.el-menu-item {
@@ -141,6 +149,13 @@ h1, h2, h3, h4, h5, h6 {
 	.el-submenu__title {
 		color: $--color-menu-text;
 		font-size: 1.2em;
+
+		&:hover{
+		  background-color: $--tag-close-background-hover-color;
+		  .svg-inline--fa {
+			color: $--color-primary;
+		  }
+		}
 		.el-submenu__icon-arrow {
 			color: $--color-menu-text;
 			font-weight: 800;

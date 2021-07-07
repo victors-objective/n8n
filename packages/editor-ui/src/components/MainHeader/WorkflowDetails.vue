@@ -8,7 +8,7 @@
 					:custom="true"
 				>
 					<template v-slot="{ shortenedName }">
-						<InlineTextEdit 
+						<InlineTextEdit
 							:value="workflowName"
 							:previewValue="shortenedName"
 							:isEditEnabled="isNameEditEnabled"
@@ -45,7 +45,7 @@
 			<span
 				class="add-tag clickable"
 				@click="onTagsEditEnable"
-			>	
+			>
 				+ Add tag
 			</span>
 		</div>
@@ -120,7 +120,7 @@ export default mixins(workflowHelpers).extend({
 	},
 	computed: {
 		...mapGetters({
-			isWorkflowActive: "isActive", 
+			isWorkflowActive: "isActive",
 			workflowName: "workflowName",
 			isDirty: "getStateIsDirty",
 			currentWorkflowTagIds: "workflowTags",
@@ -227,16 +227,18 @@ $--header-spacing: 20px;
 }
 
 .name-container {
+	flex: 1;
+	text-align: center;
 	margin-right: $--header-spacing;
 }
 
 .name {
-	color: $--custom-font-dark;
+	color: $--color-menu-text;
 	font-size: 15px;
 }
 
 .activator {
-	color: $--custom-font-dark;
+	color: $--color-menu-text;
 	font-weight: 400;
 	font-size: 13px;
 	line-height: $--text-line-height;
@@ -262,7 +264,6 @@ $--header-spacing: 20px;
 }
 
 .tags {
-	flex: 1;
 	padding-right: 20px;
 	margin-right: $--header-spacing;
 }
