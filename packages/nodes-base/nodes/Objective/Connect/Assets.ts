@@ -15,16 +15,6 @@ export const ASSETS_PROPERTIES: INodeProperties[] = [
 		type: "options",
 		options: [
 			{
-				name: 'Create a document',
-				value: 'createDocument',
-				description: "Create a document"
-			},
-			{
-				name: 'Create Folder',
-				value: 'createFolder',
-				description: "Create a Folder"
-			},
-			{
 				name: "Get Assets",
 				value: "getAssets",
 				description: "Get a page of Assets with the provided filters"
@@ -50,7 +40,7 @@ export const ASSETS_PROPERTIES: INodeProperties[] = [
 				description: "Update an Asset name by its unique identifier"
 			},
 		],
-		default: 'createFolder',
+		default: 'getAssets',
 		description: 'Actions to do with Assets',
 	},
 	{
@@ -80,7 +70,6 @@ export const ASSETS_PROPERTIES: INodeProperties[] = [
 					'assets'
 				],
 				assetAction: [
-					'createFolder',
 					'getAssets',
 					'updateName'
 				]
@@ -99,7 +88,6 @@ export const ASSETS_PROPERTIES: INodeProperties[] = [
 					'assets'
 				],
 				assetAction: [
-					'createFolder',
 					'getAssets'
 				]
 			},
@@ -117,7 +105,6 @@ export const ASSETS_PROPERTIES: INodeProperties[] = [
 					'assets'
 				],
 				assetAction: [
-					'createFolder',
 					'getAssets'
 				]
 			},
@@ -202,11 +189,6 @@ export function assetsPreRequestLogic(node: IExecuteFunctions): { url: string, m
 	const action = node.getNodeParameter('assetAction', 0) as "createFolder" | "createDocument" | "getAssets" | "getAssetByUUID" | "deleteAssetByUUID" | "updateRestrictions" | "updateName";
 
 	switch (action) {
-
-		case "createFolder":
-			return createFolder(node);
-		case "createDocument":
-			return createDocument(node);
 		case "getAssetByUUID":
 			return getAssetByUUID(node);
 		case "deleteAssetByUUID":
@@ -217,7 +199,7 @@ export function assetsPreRequestLogic(node: IExecuteFunctions): { url: string, m
 			return updateName(node);
 		case "getAssets":
 		default:
-			return getAssets(node);
+			return getAssetByUUID(node);
 	}
 }
 
@@ -290,41 +272,6 @@ function getAssetByUUID(node: IExecuteFunctions): { url: string, method: string,
 	}
 }
 
-
-function createDocument(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	//TODO
-	return {
-		url: "/me",
-		method: "GET",
-		query: {},
-		body: {},
-		headers: {Accept: "application/json"},
-		options: {}
-	}
-}
-
-function createFolder(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const name = node.getNodeParameter('name', 0) as string;
-	const parentUuid = node.getNodeParameter('parentUuid', 0) as string;
-	const workspaceUuid = node.getNodeParameter('workspaceUuid', 0) as string;
-
-
-	const body = {
-		"name": name,
-		"parentUuid": parentUuid,
-		"workspaceUuid": workspaceUuid,
-	};
-
-
-	return {
-		url: "/folders",
-		method: "POST",
-		query: {},
-		body: body,
-		headers: {Accept: "application/json", "Content-Type": "application/json"},
-		options: {}
-	}
-}
 
 function getAssets(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
 	const name = node.getNodeParameter('name', 0) as string;
