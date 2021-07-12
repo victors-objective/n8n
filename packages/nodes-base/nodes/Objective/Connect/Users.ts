@@ -28,6 +28,11 @@ export const USERS_PROPERTIES: INodeProperties[] = [
 				value: "getByID",
 				description: "Get user by UUID or email"
 			},
+			{
+				name: "Get My Contacts",
+				value: "getMyContacts",
+				description: "Get Contacts for the current User"
+			},
 
 		],
 		default: 'getMe',
@@ -123,7 +128,7 @@ export const USERS_PROPERTIES: INodeProperties[] = [
 
 
 export function usersPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('userAction', 0) as "getMe" | "create" | "getByID";
+	const action = node.getNodeParameter('userAction', 0) as "getMe" | "create" | "getByID" | "getMyContacts";
 
 	switch (action) {
 
@@ -131,9 +136,22 @@ export function usersPreRequestLogic(node: IExecuteFunctions): { url: string, me
 			return createUser(node);
 		case "getByID":
 			return getUserById(node);
+		case "getMyContacts":
+			return getMyContacts(node);
 		case "getMe":
 		default:
 			return getCurrentUser(node);
+	}
+}
+
+function getMyContacts(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	return {
+		url: "/mycontacts",
+		method: "GET",
+		query: {},
+		body: {},
+		headers: {Accept: "application/json"},
+		options: {}
 	}
 }
 
