@@ -38,6 +38,16 @@ export const WORKSPACES_PROPERTIES: INodeProperties[] = [
 				value: 'getAuditEvents',
 				description: "Get AuditEvents for a Workspace by its uuid"
 			},
+			{
+				name: 'Get Workspace Participants',
+				value: 'getParticipants',
+				description: "Get a page of Participants for a specified Workspace"
+			},
+			{
+				name: 'Add Participant to Workspace',
+				value: 'addParticipants',
+				description: "Adds Participants to a Workspace using email addresses"
+			},
 		],
 		default: 'getMy',
 		description: 'Actions to do with Workspaces',
@@ -51,11 +61,13 @@ export const WORKSPACES_PROPERTIES: INodeProperties[] = [
 				workspaceAction: [
 					'getByID',
 					'delete',
-					'getAuditEvents'
+					'getAuditEvents',
+					'getParticipants',
+					'addParticipants'
 				]
 			},
 		},
-		displayName: 'UUID',
+		displayName: 'Workspace UUID',
 		name: 'uuid',
 		type: 'string',
 		default: '',
@@ -78,6 +90,229 @@ export const WORKSPACES_PROPERTIES: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		description: 'Workspace name',
+	},
+	//Add Participant
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Email',
+		name: 'email',
+		type: 'string',
+		default: '',
+		description: 'Email',
+	},
+
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Message',
+		name: 'message',
+		type: 'string',
+		default: '',
+		description: 'Message',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Type',
+		name: 'type',
+		type: 'string',
+		default: 'STANDARD',
+		description: 'Type',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Is silent',
+		name: 'isSilent',
+		type: 'boolean',
+		default: 'false',
+		description: 'Is silent',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Download',
+		name: 'hasDownload',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Download',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Create Document',
+		name: 'hasCreateDocument',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Create Document',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Create Folder',
+		name: 'hasCreateFolder',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Create Folder',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Edit',
+		name: 'hasEdit',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Edit',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Delete',
+		name: 'hasDelete',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Delete',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Edit Online',
+		name: 'hasEditOnline',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Edit Online',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Invited',
+		name: 'hasInvited',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Invited',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Commented',
+		name: 'hasCommented',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Commented',
+	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'workspaces'
+				],
+				workspaceAction: [
+					'addParticipants'
+				]
+			},
+		},
+		displayName: 'Has Manage Workspace',
+		name: 'hasManageWorkspace',
+		type: 'boolean',
+		default: 'false',
+		description: 'Has Manage Workspace',
 	}
 ];
 
@@ -109,7 +344,7 @@ function getAuditEvents(node: IExecuteFunctions) {
 }
 
 export function workspacesPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('workspaceAction', 0) as "getMy" | "create" | "getByID" | "delete" | "getAuditEvents";
+	const action = node.getNodeParameter('workspaceAction', 0) as "getMy" | "create" | "getByID" | "delete" | "getAuditEvents" | "getParticipants" | "addParticipants";
 
 	switch (action) {
 		case "getAuditEvents":
@@ -120,6 +355,10 @@ export function workspacesPreRequestLogic(node: IExecuteFunctions): { url: strin
 			return createWorkspace(node);
 		case "getByID":
 			return getWorkspaceById(node);
+		case "getParticipants":
+			return getParticipants(node);
+		case "addParticipants":
+			return addParticipants(node);
 		case "getMy":
 		default:
 			return getMyWorkspaces(node);
@@ -163,5 +402,61 @@ function getWorkspaceById(node: IExecuteFunctions): { url: string, method: strin
 	}
 }
 
+function getParticipants(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const UUID = node.getNodeParameter('uuid', 0) as string;
 
+	return {
+		url: "/participants",
+		method: "GET",
+		query: {"workspaceUuid": UUID},
+		body: {},
+		headers: {Accept: "application/json"},
+		options: {}
+	}
+}
 
+function addParticipants(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('uuid', 0) as string;
+	const email = node.getNodeParameter('email', 0) as string;
+	const message = node.getNodeParameter('message', 0) as string;
+	const type = node.getNodeParameter('type', 0) as string;
+	const isSilent = node.getNodeParameter('isSilent', 0) as string;
+	const hasDownload = node.getNodeParameter('hasDownload', 0) as string;
+	const hasCreateDocument = node.getNodeParameter('hasCreateDocument', 0) as string;
+	const hasCreateFolder = node.getNodeParameter('hasCreateFolder', 0) as string;
+	const hasEdit = node.getNodeParameter('hasEdit', 0) as string;
+	const hasDelete = node.getNodeParameter('hasDelete', 0) as string;
+	const hasEditOnline = node.getNodeParameter('hasEditOnline', 0) as string;
+	const hasInvited = node.getNodeParameter('hasInvited', 0) as string;
+	const hasCommented = node.getNodeParameter('hasCommented', 0) as string;
+	const hasManageWorkspace = node.getNodeParameter('hasManageWorkspace', 0) as string;
+
+	const body = {
+		"workspaceUuid": uuid,
+		"emails": [
+			email
+		],
+		"message": message,
+		"type": type,
+		"isSilent": isSilent,
+		"hasDownload": hasDownload,
+		"hasCreateDocument": hasCreateDocument,
+		"hasCreateFolder": hasCreateFolder,
+		"hasEdit": hasEdit,
+		"hasDelete": hasDelete,
+		"hasEditOnline": hasEditOnline,
+		"hasInvited": hasInvited,
+		"hasCommented": hasCommented,
+		"hasManageWorkspace": hasManageWorkspace,
+
+	};
+
+	return {
+		url: "/participants",
+		method: "POST",
+		query: {},
+		body: body,
+		headers: {Accept: "application/json", "Content-Type": "application/json"},
+		options: {}
+	}
+}
