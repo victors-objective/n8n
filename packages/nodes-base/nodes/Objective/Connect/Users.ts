@@ -127,15 +127,13 @@ export const USERS_PROPERTIES: INodeProperties[] = [
 ];
 
 
-export function usersPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('userAction', 0) as "getMe" | "create" | "getByID" | "getMyContacts";
+export function usersPreRequestLogic(node: IExecuteFunctions, itemIndex: number, action: String): { url: string, method: string, query: any, body: any, headers: any, options: any } {
 
 	switch (action) {
-
 		case "create":
-			return createUser(node);
+			return createUser(node, itemIndex);
 		case "getByID":
-			return getUserById(node);
+			return getUserById(node, itemIndex);
 		case "getMyContacts":
 			return getMyContacts(node);
 		case "getMe":
@@ -166,11 +164,11 @@ function getCurrentUser(node: IExecuteFunctions): { url: string, method: string,
 	}
 }
 
-function createUser(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const givenName = node.getNodeParameter('givenName', 0) as string;
-	const familyName = node.getNodeParameter('familyName', 0) as string;
-	const email = node.getNodeParameter('email', 0) as string;
-	const workGroupID = node.getNodeParameter('workGroupID', 0) as string;
+function createUser(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const givenName = node.getNodeParameter('givenName', itemIndex) as string;
+	const familyName = node.getNodeParameter('familyName', itemIndex) as string;
+	const email = node.getNodeParameter('email', itemIndex) as string;
+	const workGroupID = node.getNodeParameter('workGroupID', itemIndex) as string;
 
 	const body = {
 		"email": email,
@@ -190,8 +188,8 @@ function createUser(node: IExecuteFunctions): { url: string, method: string, que
 	}
 }
 
-function getUserById(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const ID = node.getNodeParameter('uuid', 0) as string;
+function getUserById(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const ID = node.getNodeParameter('uuid', itemIndex) as string;
 
 	return {
 		url: "/users/" + ID,

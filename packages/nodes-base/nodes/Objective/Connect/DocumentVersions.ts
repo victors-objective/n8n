@@ -42,24 +42,23 @@ export const DOCUMENT_VERSIONS_PROPERTIES: INodeProperties[] = [
 ];
 
 
-export function docVersionPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('documentVersionAction', 0) as "getDocumentVersion" | "uploadDocumentVersion" | "downloadDocumentVersion";
+export function docVersionPreRequestLogic(node: IExecuteFunctions, itemIndex: number, action: String): { url: string, method: string, query: any, body: any, headers: any, options: any } {
 
 	switch (action) {
 		case "getDocumentVersion":
-			return getDocumentVersion(node);
+			return getDocumentVersion(node, itemIndex);
 		case "uploadDocumentVersion":
 			return uploadDocumentVersion(node);
 		case "downloadDocumentVersion":
 			return downloadDocumentVersion(node);
 		default:
-			return getDocumentVersion(node);
+			return getDocumentVersion(node, itemIndex);
 	}
 }
 
 
-function getDocumentVersion(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const uuid = node.getNodeParameter('docUuid', 0) as string;
+function getDocumentVersion(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('docUuid', itemIndex) as string;
 
 	return {
 		url: "/documentversions",

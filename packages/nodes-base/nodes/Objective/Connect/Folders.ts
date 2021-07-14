@@ -83,27 +83,23 @@ export const FOLDERS_PROPERTIES: INodeProperties[] = [
 
 ];
 
-export function foldersPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('folderAction', 0) as "createFolder";
+export function foldersPreRequestLogic(node: IExecuteFunctions, itemIndex: number, action: String): { url: string, method: string, query: any, body: any, headers: any, options: any } {
 
 	switch (action) {
 
 		case "createFolder":
-			return createFolder(node);
+			return createFolder(node, itemIndex);
 
 		default:
-			return createFolder(node);
+			return createFolder(node, itemIndex);
 	}
 }
 
 
-
-
-
-function createFolder(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const name = node.getNodeParameter('name', 0) as string;
-	const parentUuid = node.getNodeParameter('parentUuid', 0) as string;
-	const workspaceUuid = node.getNodeParameter('workspaceUuid', 0) as string;
+function createFolder(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const name = node.getNodeParameter('name', itemIndex) as string;
+	const parentUuid = node.getNodeParameter('parentUuid', itemIndex) as string;
+	const workspaceUuid = node.getNodeParameter('workspaceUuid', itemIndex) as string;
 
 
 	const body = {

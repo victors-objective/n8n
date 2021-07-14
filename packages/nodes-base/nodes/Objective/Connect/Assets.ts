@@ -185,27 +185,26 @@ export const ASSETS_PROPERTIES: INodeProperties[] = [
 	},
 ];
 
-export function assetsPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('assetAction', 0) as "createFolder" | "createDocument" | "getAssets" | "getAssetByUUID" | "deleteAssetByUUID" | "updateRestrictions" | "updateName";
+export function assetsPreRequestLogic(node: IExecuteFunctions, itemIndex: number, action: String): { url: string, method: string, query: any, body: any, headers: any, options: any } {
 
 	switch (action) {
 		case "getAssetByUUID":
-			return getAssetByUUID(node);
+			return getAssetByUUID(node, itemIndex);
 		case "deleteAssetByUUID":
-			return deleteAssetByUUID(node);
+			return deleteAssetByUUID(node, itemIndex);
 		case "updateRestrictions":
-			return updateRestriction(node);
+			return updateRestriction(node, itemIndex);
 		case "updateName":
-			return updateName(node);
+			return updateName(node, itemIndex);
 		case "getAssets":
 		default:
-			return getAssetByUUID(node);
+			return getAssetByUUID(node, itemIndex);
 	}
 }
 
-function updateName(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const uuid = node.getNodeParameter('assetUuid', 0) as string;
-	const name = node.getNodeParameter('name', 0) as string;
+function updateName(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('assetUuid', itemIndex) as string;
+	const name = node.getNodeParameter('name', itemIndex) as string;
 
 	const body = {
 		"name": name,
@@ -222,11 +221,11 @@ function updateName(node: IExecuteFunctions): { url: string, method: string, que
 
 }
 
-function updateRestriction(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const uuid = node.getNodeParameter('assetUuid', 0) as string;
-	const allowNewDocument = node.getNodeParameter('allowNewDocument', 0) as string;
-	const allowNewFolder = node.getNodeParameter('allowNewFolder', 0) as string;
-	const allowEdit = node.getNodeParameter('allowEdit', 0) as string;
+function updateRestriction(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('assetUuid', itemIndex) as string;
+	const allowNewDocument = node.getNodeParameter('allowNewDocument', itemIndex) as string;
+	const allowNewFolder = node.getNodeParameter('allowNewFolder', itemIndex) as string;
+	const allowEdit = node.getNodeParameter('allowEdit', itemIndex) as string;
 
 	const body = {
 		"allowNewDocument": allowNewDocument,
@@ -245,8 +244,8 @@ function updateRestriction(node: IExecuteFunctions): { url: string, method: stri
 }
 
 
-function deleteAssetByUUID(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const UUID = node.getNodeParameter('assetUuid', 0) as string;
+function deleteAssetByUUID(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const UUID = node.getNodeParameter('assetUuid', itemIndex) as string;
 
 	return {
 		url: "/assets/" + UUID,
@@ -259,8 +258,8 @@ function deleteAssetByUUID(node: IExecuteFunctions): { url: string, method: stri
 
 }
 
-function getAssetByUUID(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const UUID = node.getNodeParameter('assetUuid', 0) as string;
+function getAssetByUUID(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const UUID = node.getNodeParameter('assetUuid', itemIndex) as string;
 
 	return {
 		url: "/assets/" + UUID,
@@ -273,11 +272,11 @@ function getAssetByUUID(node: IExecuteFunctions): { url: string, method: string,
 }
 
 
-function getAssets(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const name = node.getNodeParameter('name', 0) as string;
-	const parentUuid = node.getNodeParameter('parentUuid', 0) as string;
-	const workspaceUuid = node.getNodeParameter('workspaceUuid', 0) as string;
-	const ancestorUuid = node.getNodeParameter('ancestorUuid', 0) as string;
+function getAssets(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const name = node.getNodeParameter('name', itemIndex) as string;
+	const parentUuid = node.getNodeParameter('parentUuid', itemIndex) as string;
+	const workspaceUuid = node.getNodeParameter('workspaceUuid', itemIndex) as string;
+	const ancestorUuid = node.getNodeParameter('ancestorUuid', itemIndex) as string;
 
 	const query: any = {};
 

@@ -316,8 +316,8 @@ export const WORKSPACES_PROPERTIES: INodeProperties[] = [
 	}
 ];
 
-function deleteWorkspace(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const UUID = node.getNodeParameter('uuid', 0) as string;
+function deleteWorkspace(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const UUID = node.getNodeParameter('uuid', itemIndex) as string;
 
 	return {
 		url: "/workspaces/" + UUID,
@@ -329,8 +329,8 @@ function deleteWorkspace(node: IExecuteFunctions): { url: string, method: string
 	}
 }
 
-function getAuditEvents(node: IExecuteFunctions) {
-	const UUID = node.getNodeParameter('uuid', 0) as string;
+function getAuditEvents(node: IExecuteFunctions, itemIndex: number) {
+	const UUID = node.getNodeParameter('uuid', itemIndex) as string;
 
 	return {
 		url: "/workspaces/" + UUID + "/auditevents",
@@ -343,22 +343,22 @@ function getAuditEvents(node: IExecuteFunctions) {
 
 }
 
-export function workspacesPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('workspaceAction', 0) as "getMy" | "create" | "getByID" | "delete" | "getAuditEvents" | "getParticipants" | "addParticipants";
+export function workspacesPreRequestLogic(node: IExecuteFunctions, itemIndex: number, action: String): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+
 
 	switch (action) {
 		case "getAuditEvents":
-			return getAuditEvents(node);
+			return getAuditEvents(node, itemIndex);
 		case "delete":
-			return deleteWorkspace(node);
+			return deleteWorkspace(node, itemIndex);
 		case "create":
-			return createWorkspace(node);
+			return createWorkspace(node, itemIndex);
 		case "getByID":
-			return getWorkspaceById(node);
+			return getWorkspaceById(node, itemIndex);
 		case "getParticipants":
-			return getParticipants(node);
+			return getParticipants(node, itemIndex);
 		case "addParticipants":
-			return addParticipants(node);
+			return addParticipants(node, itemIndex);
 		case "getMy":
 		default:
 			return getMyWorkspaces(node);
@@ -376,8 +376,8 @@ function getMyWorkspaces(node: IExecuteFunctions): { url: string, method: string
 	}
 }
 
-function createWorkspace(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const name = node.getNodeParameter('name', 0) as string; //TODO
+function createWorkspace(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const name = node.getNodeParameter('name', itemIndex) as string; //TODO
 
 	return {
 		url: "/workspaces/",
@@ -389,8 +389,8 @@ function createWorkspace(node: IExecuteFunctions): { url: string, method: string
 	}
 }
 
-function getWorkspaceById(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const UUID = node.getNodeParameter('uuid', 0) as string;
+function getWorkspaceById(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const UUID = node.getNodeParameter('uuid', itemIndex) as string;
 
 	return {
 		url: "/workspaces/" + UUID,
@@ -402,8 +402,8 @@ function getWorkspaceById(node: IExecuteFunctions): { url: string, method: strin
 	}
 }
 
-function getParticipants(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const UUID = node.getNodeParameter('uuid', 0) as string;
+function getParticipants(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const UUID = node.getNodeParameter('uuid', itemIndex) as string;
 
 	return {
 		url: "/participants",
@@ -415,21 +415,21 @@ function getParticipants(node: IExecuteFunctions): { url: string, method: string
 	}
 }
 
-function addParticipants(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const uuid = node.getNodeParameter('uuid', 0) as string;
-	const email = node.getNodeParameter('email', 0) as string;
-	const message = node.getNodeParameter('message', 0) as string;
-	const type = node.getNodeParameter('type', 0) as string;
-	const isSilent = node.getNodeParameter('isSilent', 0) as string;
-	const hasDownload = node.getNodeParameter('hasDownload', 0) as string;
-	const hasCreateDocument = node.getNodeParameter('hasCreateDocument', 0) as string;
-	const hasCreateFolder = node.getNodeParameter('hasCreateFolder', 0) as string;
-	const hasEdit = node.getNodeParameter('hasEdit', 0) as string;
-	const hasDelete = node.getNodeParameter('hasDelete', 0) as string;
-	const hasEditOnline = node.getNodeParameter('hasEditOnline', 0) as string;
-	const hasInvited = node.getNodeParameter('hasInvited', 0) as string;
-	const hasCommented = node.getNodeParameter('hasCommented', 0) as string;
-	const hasManageWorkspace = node.getNodeParameter('hasManageWorkspace', 0) as string;
+function addParticipants(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('uuid', itemIndex) as string;
+	const email = node.getNodeParameter('email', itemIndex) as string;
+	const message = node.getNodeParameter('message', itemIndex) as string;
+	const type = node.getNodeParameter('type', itemIndex) as string;
+	const isSilent = node.getNodeParameter('isSilent', itemIndex) as string;
+	const hasDownload = node.getNodeParameter('hasDownload', itemIndex) as string;
+	const hasCreateDocument = node.getNodeParameter('hasCreateDocument', itemIndex) as string;
+	const hasCreateFolder = node.getNodeParameter('hasCreateFolder', itemIndex) as string;
+	const hasEdit = node.getNodeParameter('hasEdit', itemIndex) as string;
+	const hasDelete = node.getNodeParameter('hasDelete', itemIndex) as string;
+	const hasEditOnline = node.getNodeParameter('hasEditOnline', itemIndex) as string;
+	const hasInvited = node.getNodeParameter('hasInvited', itemIndex) as string;
+	const hasCommented = node.getNodeParameter('hasCommented', itemIndex) as string;
+	const hasManageWorkspace = node.getNodeParameter('hasManageWorkspace', itemIndex) as string;
 
 	const body = {
 		"workspaceUuid": uuid,

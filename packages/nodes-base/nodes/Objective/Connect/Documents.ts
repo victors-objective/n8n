@@ -45,7 +45,8 @@ export const DOCUMENTS_PROPERTIES: INodeProperties[] = [
 					'documents'
 				],
 				documentAction: [
-					'lockDocument'
+					'lockDocument',
+					'downloadDocument',
 				]
 			},
 		},
@@ -89,19 +90,35 @@ export const DOCUMENTS_PROPERTIES: INodeProperties[] = [
 		default: 'true',
 		description: 'Locked or unlocked document status',
 	},
+	{
+		displayOptions: {
+			show: {
+				resource: [
+					'documents'
+				],
+				documentAction: [
+					'downloadDocument'
+				]
+			},
+		},
+		displayName: 'Binary property name',
+		name: 'binaryPropertyName',
+		type: 'string',
+		default: 'data',
+		description: 'Binary property name for document content',
+	},
 ];
 
 
-export function documentsPreRequestLogic(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const action = node.getNodeParameter('documentAction', 0) as "createDocument" | "lockDocument" | "updateDocument" | "downloadDocument";
+export function documentsPreRequestLogic(node: IExecuteFunctions, itemIndex: number, action: String): { url: string, method: string, query: any, body: any, headers: any, options: any } {
 
 	switch (action) {
 		case "createDocument":
 			return createDocument(node);
 		case "lockDocument":
-			return lockDocument(node)
+			return lockDocument(node, itemIndex)
 		case "downloadDocument":
-			return downloadDocument(node);
+			return downloadDocument(node, itemIndex);
 		case "updateDocument":
 			return updateDocument(node);
 		default:
@@ -109,9 +126,9 @@ export function documentsPreRequestLogic(node: IExecuteFunctions): { url: string
 	}
 }
 
-function lockDocument(node: IExecuteFunctions): { url: string, method: string, query: any, body: any, headers: any, options: any } {
-	const uuid = node.getNodeParameter('documentUuid', 0) as string;
-	const locked = node.getNodeParameter('locked', 0) as string;
+function lockDocument(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('documentUuid', itemIndex) as string;
+	const locked = node.getNodeParameter('locked', itemIndex) as string;
 
 	const body = {
 		"locked": locked,
@@ -126,9 +143,17 @@ function lockDocument(node: IExecuteFunctions): { url: string, method: string, q
 	}
 }
 
-function downloadDocument(node: IExecuteFunctions) {
-	//TODO
-	return {body: undefined, headers: undefined, method: "", options: undefined, query: undefined, url: ""};
+function downloadDocument(node: IExecuteFunctions, itemIndex: number): { url: string, method: string, query: any, body: any, headers: any, options: any } {
+	const uuid = node.getNodeParameter('documentUuid', itemIndex) as string;
+
+	return {
+		url: "/documents/" + uuid + "/download",
+		method: "GET",
+		query: {},
+		body: {},
+		headers: {Accept: "*/*"},
+		options: {encoding: null}
+	}
 }
 
 function updateDocument(node: IExecuteFunctions) {
